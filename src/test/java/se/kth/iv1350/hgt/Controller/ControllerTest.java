@@ -34,6 +34,7 @@ public class ControllerTest {
 
         instance = new Controller(eis, eas, printer, dc);
 
+        instance.startSale();
     }
 
     @After
@@ -53,7 +54,6 @@ public class ControllerTest {
 
     @Test
     public void addItem() {
-        instance.startSale();
         try {
             SaleInfoDTO test = instance.enterItem("identifier1");
             double runningTotal = test.getRunningTotal();
@@ -64,8 +64,21 @@ public class ControllerTest {
     }
 
     @Test
+    public void addItemPrintsWhenExceptionIsThrown() {
+        try {
+            instance.enterItem("INVALID IDENTIFIER");
+            fail("Exception was not thrown when ite should have");
+        } catch (ItemNotFoundException | ServerDownException exc) {
+            String printOut = this.printOutBuffer.toString();
+            String expectedOutput = "[FOR DEVELOPER]";
+            assertTrue("Controller did not log as expected (Add item)", printOut.contains(expectedOutput));
+        } catch(Exception e) {
+            fail("Wrong exception was thrown");
+        }
+    }
+
+    @Test
     public void addMultipleOfSame() {
-        instance.startSale();
         String identifier = "identifier1";
         try {
             instance.enterItem(identifier);
@@ -78,8 +91,15 @@ public class ControllerTest {
     }
 
     @Test
+    public void applyDiscountsLoggingCorrectly() {
+        instance.applyDiscounts();
+        String printOut = this.printOutBuffer.toString();
+        String expectedOutput = "[LOG]";
+        assertTrue("Controller did not log as expected (Discount)", printOut.contains(expectedOutput));
+    }
+
+    @Test
     public void checkIfChangeIsCalculatedCorrectly() {
-        instance.startSale();
         try {
             instance.enterItem("identifier1");
             double change = instance.pay(90, "SEK");

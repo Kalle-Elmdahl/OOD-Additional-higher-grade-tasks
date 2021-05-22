@@ -8,22 +8,38 @@ import se.kth.iv1350.hgt.DTO.*;
 import se.kth.iv1350.hgt.integration.EISHandler;
 import se.kth.iv1350.hgt.integration.ItemNotFoundException;
 import se.kth.iv1350.hgt.integration.ServerDownException;
+import se.kth.iv1350.hgt.model.Item;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
 public class EISHandlerTest {
     private EISHandler instance;
+    private ByteArrayOutputStream printOutBuffer;
+    private PrintStream originalSysOut;
 
     @Before
     public void setUp() {
+        printOutBuffer = new ByteArrayOutputStream();
+        PrintStream inMemSysOut = new PrintStream(printOutBuffer);
+        originalSysOut = System.out;
+        System.setOut(inMemSysOut);
+
         instance = new EISHandler();
 
     }
 
     @After
     public void tearDown() {
+        printOutBuffer = null;
+        System.setOut(originalSysOut);
+
         instance = null;
     }
 
@@ -71,5 +87,13 @@ public class EISHandlerTest {
         } catch (Exception exc) {
             fail("Wrong exception was thrown: " + exc.getMessage());
         }
+    }
+
+    @Test
+    public void testUpdateInventoryLoggingCorrectly() {
+        instance.updateInventory(new SaleDTO(LocalTime.now(), new ArrayList<Item>(), 10, 5));
+        String printOut = this.printOutBuffer.toString();
+        String expectedOutput = "updating inventory";
+        assertTrue("EISHandler did not log correctly", printOut.contains(expectedOutput));
     }
 }

@@ -48,7 +48,7 @@ public class ViewTest {
     public void viewTest() {
         instanceToTest.runFakeExecution();
         String printOut = this.printOutBuffer.toString();
-        String expectedOutput = "started";
-        assertTrue("UI did not start correctly", printOut.contains(expectedOutput));
+        String expectedOutput = "A payment of 500 SEK";
+        assertTrue("Fake execution was not run all the way through", printOut.contains(expectedOutput));
     }
 }

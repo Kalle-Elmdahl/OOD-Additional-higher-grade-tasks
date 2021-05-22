@@ -32,7 +32,24 @@ public class Receipt {
         this.currency = payment.getCurrency();
     }
 
-
+    /**
+     * Creates a string reperesentation of the receipt
+     * @return String a printable string
+     */
+    public String toString() {
+        StringBuilder string = new StringBuilder();
+        string.append("\n\n==== Receipt ====");
+        string.append("\nTime of sale: " + this.timeOfSale);
+        string.append("\n\nItems bought: ");
+        for(Item item : items) {
+            string.append("\n " + item.getName());
+        }
+        string.append("\n\nPayment");
+        string.append("\nAmpunt paid: " + amountPaid);
+        string.append("\nCurrency: " + currency);
+        string.append("\n=================");
+        return string.toString();
+    }
     
     /** 
      * This function returns the time when the sale was started.

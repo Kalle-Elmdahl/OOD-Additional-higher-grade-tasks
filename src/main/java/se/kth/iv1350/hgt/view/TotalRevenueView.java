@@ -1,25 +1,19 @@
 package se.kth.iv1350.hgt.view;
 
-import se.kth.iv1350.hgt.model.SaleObserver;
-
 /**
  * TotalRevenueView This class writes to the console whenever notified.
  */
-class TotalRevenueView implements SaleObserver {
-    private double totalRevenue;
-    
-    /**
-     * Creates a new instance of the totalRevenueView class
-     */
-    TotalRevenueView() {
-        totalRevenue = 0;
-    }
-
+class TotalRevenueView extends TotalRevenueDisplay {
     @Override
-    public void newSale(double priceOfPurchase) {
-        totalRevenue += priceOfPurchase;
+    protected void doShowTotalIncome(double totalRevenue) throws Exception {
         System.out.println("--- A message from TotalRevenueobserver ---");
         System.out.println("The total revenue since the program started is: " + totalRevenue);
         System.out.println("-------------------------------------------");
+        
+    }
+
+    @Override
+    protected void handleErrors(Exception e) {
+        System.out.println("Could not display total revenue :(");
     }
 }

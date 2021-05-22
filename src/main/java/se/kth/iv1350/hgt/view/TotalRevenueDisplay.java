@@ -1,7 +1,16 @@
 package se.kth.iv1350.hgt.view;
 
-public abstract class TotalRevenueDisplay {
-    public void newSaleWasMade(double priceOfTheSale) {
+import se.kth.iv1350.hgt.model.SaleObserver;
+
+public abstract class TotalRevenueDisplay implements SaleObserver {
+    private double totalRevenue;
+
+    protected TotalRevenueDisplay() {
+        totalRevenue = 0;
+    }
+
+    @Override
+    public void newSale(double priceOfTheSale) {
         calculateTotalIncome(priceOfTheSale);
 
         showTotalIncome();
@@ -9,17 +18,17 @@ public abstract class TotalRevenueDisplay {
 
     private void showTotalIncome() {
         try {
-            doShowTotalIncome();
+            doShowTotalIncome(totalRevenue);
         } catch(Exception e) {
             handleErrors(e);
         }
     }
 
     private void calculateTotalIncome(double priceOfTheSale) {
-
+        totalRevenue += priceOfTheSale;
     }
 
-    protected abstract void doShowTotalIncome();
+    protected abstract void doShowTotalIncome(double totalRevenue) throws Exception;
 
     protected abstract void handleErrors(Exception e);
 }

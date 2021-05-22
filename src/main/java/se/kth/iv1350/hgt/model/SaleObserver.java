@@ -10,5 +10,4 @@ public interface SaleObserver {
      * @param priceOfPurchase The cost of the sale
      */
     public void newSale(double priceOfPurchase);
-    
 }
